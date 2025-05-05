@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import api from '../utils/axiosConfig';
 import womenFallbackImage from '../assets/women.jpg';
 
 const WomenPage = () => {
@@ -28,7 +28,7 @@ const WomenPage = () => {
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('/api/products/category/women');
+        const response = await api.get('/api/products/category/women');
         if (response.data.success) {
           setProducts(response.data.products);
         } else {

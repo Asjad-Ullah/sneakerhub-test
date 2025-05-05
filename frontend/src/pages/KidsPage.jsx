@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import api from '../utils/axiosConfig';
 import kidsFallbackImage from '../assets/kids.jpg';
 
 const KidsPage = () => {
@@ -28,7 +28,7 @@ const KidsPage = () => {
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('/api/products/category/kids');
+        const response = await api.get('/api/products/category/kids');
         if (response.data.success) {
           setProducts(response.data.products);
         } else {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import axios from 'axios';
+import api from '../utils/axiosConfig';
 import { FaHeart, FaArrowLeft } from 'react-icons/fa';
 
 const ProductPage = () => {
@@ -17,7 +17,7 @@ const ProductPage = () => {
     const fetchProduct = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`/api/products/${id}`);
+        const response = await api.get(`/api/products/${id}`);
         if (response.data.success) {
           setProduct(response.data.product);
           // Set first size as default if available

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import api from '../utils/axiosConfig';
 import { FaArrowRight } from 'react-icons/fa';
 
 const NewPage = () => {
@@ -18,7 +18,7 @@ const NewPage = () => {
       try {
         setLoading(true);
         // Get the most recent products
-        const response = await axios.get('/api/products?sort=-createdAt&limit=12');
+        const response = await api.get('/api/products?sort=-createdAt&limit=12');
         
         if (response.data.success) {
           // Organize products by category
