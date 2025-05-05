@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import api from '../utils/axiosConfig';
 
 const FeaturedProducts = () => {
   const [products, setProducts] = useState([]);
@@ -12,7 +12,7 @@ const FeaturedProducts = () => {
       try {
         setLoading(true);
         // Fetch featured products from your database
-        const response = await axios.get('/api/products?featured=true&limit=4');
+        const response = await api.get('/api/products?featured=true&limit=4');
         
         if (response.data.success) {
           setProducts(response.data.products);

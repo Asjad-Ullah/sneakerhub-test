@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import Slider from 'react-slick';
-import axios from 'axios';
+import api from '../utils/axiosConfig';
 // Import slick carousel styles
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -76,7 +76,7 @@ const Slideshow = () => {
       try {
         // The API doesn't have a specific endpoint for latest products,
         // but we can sort by createdAt in descending order
-        const response = await axios.get('/api/products?limit=3');
+        const response = await api.get('/api/products?limit=3');
         console.log('API Response:', response.data); // Debug log
         
         if (response.data.success && response.data.products && response.data.products.length > 0) {
