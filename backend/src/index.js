@@ -25,7 +25,11 @@ app.use(cookieParser()); // Parse cookies
 
 // Set cookie options based on environment
 app.use((req, res, next) => {
-  res.cookie = (name, value, options = {}) => {
+  // Store the original cookie method
+  const originalCookie = res.cookie;
+  
+  // Replace it with our custom implementation
+  res.cookie = function(name, value, options = {}) {
     const isProduction = process.env.NODE_ENV === 'production';
     const defaultOptions = {
       httpOnly: true,
@@ -33,7 +37,8 @@ app.use((req, res, next) => {
       sameSite: isProduction ? 'none' : 'lax', // Must be 'none' for cross-site cookies in production
       maxAge: 1000 * 60 * 60 * 24 * 7 // 7 days
     };
-    return res.cookie(name, value, { ...defaultOptions, ...options });
+    // Call the original method with our enhanced options
+    return originalCookie.call(this, name, value, { ...defaultOptions, ...options });
   };
   next();
 });
