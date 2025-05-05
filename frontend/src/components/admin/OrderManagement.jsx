@@ -195,7 +195,7 @@ const OrderManagement = ({ orders: initialOrders, loading: initialLoading, error
       setActionError(null);
       
       const response = await fetch(getApiUrl(`/api/orders/${orderToUpdate._id}/status`), {
-        method: 'PATCH',
+        method: 'PUT',  // Changed from PATCH to PUT to match backend route
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
