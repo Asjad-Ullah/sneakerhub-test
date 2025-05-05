@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import axios from 'axios';
+import api from '../utils/axiosConfig';
 import { 
   sanitizeInput, 
   sanitizeObject, 
@@ -134,7 +134,7 @@ const PaymentPage = () => {
 
       // Verify stock availability before placing order
       const stockCheckPromises = cartItems.map(async item => {
-        const response = await axios.get(`/api/products/${item._id}`);
+        const response = await api.get(`/api/products/${item._id}`);
         if (response.data.success) {
           const product = response.data.product;
           const sizeInfo = product.sizes.find(s => s.size === item.size);
@@ -177,7 +177,7 @@ const PaymentPage = () => {
       }
 
       // Send order to backend API
-      const response = await axios.post('/api/orders', orderData, {
+      const response = await api.post('/api/orders', orderData, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
