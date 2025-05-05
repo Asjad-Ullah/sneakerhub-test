@@ -1,10 +1,11 @@
-# Render service configuration
-
-# Build commands
-build = "npm install"
-
-# Start command
-start = "npm start"
-
-# Node.js version
-node = "18"
+services:
+  - type: web
+    name: sneakerhub-backend
+    env: node
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: NODE_ENV
+        value: production

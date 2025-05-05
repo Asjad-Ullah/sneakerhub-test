@@ -1,7 +1,12 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
-const JWT_SECRET = process.env.JWT_SECRET || 'sneakerhub-secret-key';
+const JWT_SECRET = process.env.JWT_SECRET;
+
+// Fallback only for development
+if (!JWT_SECRET) {
+  console.warn('WARNING: JWT_SECRET not set in environment variables. Using insecure default.');
+}
 
 const COOKIE_OPTIONS = {
   httpOnly: true,
