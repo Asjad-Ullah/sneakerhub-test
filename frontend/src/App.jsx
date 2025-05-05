@@ -22,7 +22,7 @@ import NewPage from './pages/NewPage';
 import SearchPage from './pages/SearchPage';
 import ProfilePage from './pages/ProfilePage';
 import { useAuth } from './context/AuthContext';
-import axios from 'axios';
+import api from './utils/axiosConfig';
 
 // Private route component for admin-only routes
 const AdminRoute = ({ children }) => {
@@ -52,7 +52,7 @@ function App() {
   useEffect(() => {
     const fetchFeaturedProducts = async () => {
       try {
-        const response = await axios.get('/api/products?featured=true&limit=6');
+        const response = await api.get('/api/products?featured=true&limit=6');
         if (response.data.success) {
           setFeaturedProducts(response.data.products);
         }
