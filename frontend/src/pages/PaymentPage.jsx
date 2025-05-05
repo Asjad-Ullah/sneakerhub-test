@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import api from '../utils/axiosConfig';
+import Toast from '../components/Toast';
 import { 
   sanitizeInput, 
   sanitizeObject, 
@@ -27,6 +28,7 @@ const PaymentPage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [fieldErrors, setFieldErrors] = useState({});
+  const [toast, setToast] = useState({ show: false, message: '', type: 'success' });
 
   // Calculate order summary
   const subtotal = cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
@@ -188,9 +190,23 @@ const PaymentPage = () => {
         // Clear cart
         localStorage.setItem('cartItems', JSON.stringify([]));
         
-        // Show success message and redirect
-        alert('Order placed successfully! Thank you for your purchase.');
-        navigate('/');
+        // Show success message with toast notification
+        setToast({
+          show: true,
+          message: 'Order placed successfully! Thank you for your purchase.',
+          type: 'success'
+        });
+
+        // Wait a moment for the toast to be seen before navigating
+        setTimeout(() => {
+          // Navigate to order history page (profile page with orders tab)
+          navigate('/profile', { 
+            state: { 
+              activeTab: 'orders',
+              fromPayment: true 
+            } 
+          });
+        }, 2000);
       } else {
         setError('Failed to create order. Please try again.');
       }
@@ -204,6 +220,15 @@ const PaymentPage = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      {/* Toast Notification */}
+      {toast.show && (
+        <Toast 
+          message={toast.message} 
+          type={toast.type} 
+          onClose={() => setToast({ ...toast, show: false })} 
+        />
+      )}
+      
       <h1 className="text-3xl font-bold mb-8">Checkout</h1>
       
       <div className="lg:grid lg:grid-cols-12 lg:gap-8">

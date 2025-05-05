@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { getApiUrl } from '../utils/axiosConfig';
+import Toast from '../components/Toast';
 
 const ProfilePage = () => {
   const { currentUser, token } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   
   // User profile form state
   const [formData, setFormData] = useState({
@@ -27,8 +29,13 @@ const ProfilePage = () => {
   const [orders, setOrders] = useState([]);
   const [loadingOrders, setLoadingOrders] = useState(true);
   
-  // Active tab state
-  const [activeTab, setActiveTab] = useState('profile');
+  // Toast notification state
+  const [toast, setToast] = useState({ show: false, message: '', type: 'success' });
+  
+  // Active tab state - check location.state for initial tab
+  const [activeTab, setActiveTab] = useState(
+    location.state?.activeTab || 'profile'
+  );
 
   // Load user data into form when currentUser changes
   useEffect(() => {
@@ -43,7 +50,16 @@ const ProfilePage = () => {
       // If no user is logged in, redirect to home page
       navigate('/');
     }
-  }, [currentUser, navigate]);
+    
+    // Check if we just navigated from successful payment
+    if (location.state?.activeTab === 'orders' && location.state?.fromPayment) {
+      setToast({
+        show: true,
+        message: 'Your order has been placed successfully!',
+        type: 'success'
+      });
+    }
+  }, [currentUser, navigate, location.state]);
 
   // Load user's order history
   useEffect(() => {
@@ -221,6 +237,15 @@ const ProfilePage = () => {
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-5xl">
+      {/* Toast Notification */}
+      {toast.show && (
+        <Toast 
+          message={toast.message} 
+          type={toast.type} 
+          onClose={() => setToast({ ...toast, show: false })} 
+        />
+      )}
+      
       <h1 className="text-3xl font-bold mb-8 text-center">My Account</h1>
       
       {/* Tab navigation */}
