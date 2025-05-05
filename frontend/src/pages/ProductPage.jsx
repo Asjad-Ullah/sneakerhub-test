@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import api from '../utils/axiosConfig';
 import { FaHeart, FaArrowLeft } from 'react-icons/fa';
+import Toast from '../components/Toast';
 
 const ProductPage = () => {
   const { id } = useParams();
@@ -12,6 +13,7 @@ const ProductPage = () => {
   const [selectedSize, setSelectedSize] = useState('');
   const [quantity, setQuantity] = useState(1);
   const [isWishlisted, setIsWishlisted] = useState(false);
+  const [toast, setToast] = useState({ show: false, message: '', type: 'success' });
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -75,7 +77,11 @@ const ProductPage = () => {
   // Handle add to cart
   const addToCart = () => {
     if (!selectedSize) {
-      alert('Please select a size');
+      setToast({
+        show: true,
+        message: 'Please select a size',
+        type: 'warning'
+      });
       return;
     }
 
@@ -87,7 +93,11 @@ const ProductPage = () => {
     
     // Check if size is in stock
     if (!sizeInfo || sizeInfo.stock < quantity) {
-      alert('Selected size is out of stock or insufficient quantity available');
+      setToast({
+        show: true,
+        message: 'Selected size is out of stock or insufficient quantity available',
+        type: 'error'
+      });
       return;
     }
     
@@ -113,7 +123,11 @@ const ProductPage = () => {
       if (sizeInfo.stock >= newQuantity) {
         currentCart[existingItemIndex].quantity = newQuantity;
       } else {
-        alert(`Cannot add more. Only ${sizeInfo.stock} items available in this size.`);
+        setToast({
+          show: true,
+          message: `Cannot add more. Only ${sizeInfo.stock} items available in this size.`,
+          type: 'warning'
+        });
         return;
       }
     } else {
@@ -124,8 +138,12 @@ const ProductPage = () => {
     // Save updated cart to localStorage
     localStorage.setItem('cartItems', JSON.stringify(currentCart));
     
-    // Provide feedback to user
-    alert(`Added ${product.name} (Size: ${selectedSize}) to cart`);
+    // Provide feedback to user with toast notification
+    setToast({
+      show: true,
+      message: `Added ${product.name} (Size: ${selectedSize}) to cart`,
+      type: 'success'
+    });
   };
 
   // Handle wishlist toggle
@@ -147,13 +165,21 @@ const ProductPage = () => {
       if (!wishlistItems.some(item => item._id === product._id)) {
         wishlistItems.push(wishlistItem);
         localStorage.setItem('wishlistItems', JSON.stringify(wishlistItems));
-        alert(`Added ${product.name} to wishlist`);
+        setToast({
+          show: true,
+          message: `Added ${product.name} to wishlist`,
+          type: 'success'
+        });
       }
     } else {
       // Remove from wishlist
       const updatedWishlist = wishlistItems.filter(item => item._id !== product._id);
       localStorage.setItem('wishlistItems', JSON.stringify(updatedWishlist));
-      alert(`Removed ${product.name} from wishlist`);
+      setToast({
+        show: true,
+        message: `Removed ${product.name} from wishlist`,
+        type: 'info'
+      });
     }
     
     // Update state
@@ -192,6 +218,15 @@ const ProductPage = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      {/* Toast Notification */}
+      {toast.show && (
+        <Toast 
+          message={toast.message} 
+          type={toast.type} 
+          onClose={() => setToast({ ...toast, show: false })} 
+        />
+      )}
+      
       {/* Back button */}
       <Link 
         to={`/${product.category.gender}`} 
