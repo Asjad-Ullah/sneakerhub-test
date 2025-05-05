@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FaEdit, FaTrash, FaSearch, FaEye, FaFilter } from 'react-icons/fa';
+import { getApiUrl } from '../../utils/axiosConfig';
 
 const OrderManagement = ({ orders: initialOrders, loading: initialLoading, error: initialError, token }) => {
   const [orders, setOrders] = useState(initialOrders || []);
@@ -49,7 +50,7 @@ const OrderManagement = ({ orders: initialOrders, loading: initialLoading, error
       setError(null);
       
       const queryParams = statusFilter !== 'all' ? `?status=${statusFilter}` : '';
-      const response = await fetch(`http://localhost:5000/api/orders/admin${queryParams}`, {
+      const response = await fetch(getApiUrl(`/api/orders/admin${queryParams}`), {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -129,8 +130,8 @@ const OrderManagement = ({ orders: initialOrders, loading: initialLoading, error
       setActionLoading(true);
       setActionError(null);
       
-      const response = await fetch(`http://localhost:5000/api/orders/admin/cancel/${orderToDelete._id}`, {
-        method: 'PUT',
+      const response = await fetch(getApiUrl(`/api/orders/admin/cancel/${orderToDelete._id}`), {
+        method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
@@ -193,8 +194,8 @@ const OrderManagement = ({ orders: initialOrders, loading: initialLoading, error
       setActionLoading(true);
       setActionError(null);
       
-      const response = await fetch(`http://localhost:5000/api/orders/${orderToUpdate._id}/status`, {
-        method: 'PUT',
+      const response = await fetch(getApiUrl(`/api/orders/${orderToUpdate._id}/status`), {
+        method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`

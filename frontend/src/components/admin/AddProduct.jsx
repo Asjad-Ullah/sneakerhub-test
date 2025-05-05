@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FaTimes, FaImage } from 'react-icons/fa';
 import { sanitizeInput, sanitizeObject, isValidUrl } from '../../utils/validation';
+import { getApiUrl } from '../../utils/axiosConfig';
 
 const AddProduct = ({ token }) => {
   const [submitLoading, setSubmitLoading] = useState(false);
@@ -253,13 +254,10 @@ const AddProduct = ({ token }) => {
         featured: newProductForm.featured
       };
       
-      // Skip sanitization for troubleshooting as it might be affecting the nested structure
-      // const sanitizedProductData = sanitizeObject(productData);
-      
       console.log('Sending product data:', JSON.stringify(productData, null, 2));
       
       // Make the API request with the raw product data
-      const response = await fetch('http://localhost:5000/api/products', {
+      const response = await fetch(getApiUrl('/api/products'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

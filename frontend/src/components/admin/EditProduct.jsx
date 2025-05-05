@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FaTimes, FaImage, FaSave } from 'react-icons/fa';
+import { getApiUrl } from '../../utils/axiosConfig';
 
 const EditProduct = ({ token, productId, setActiveSection }) => {
   const [product, setProduct] = useState(null);
@@ -15,37 +16,36 @@ const EditProduct = ({ token, productId, setActiveSection }) => {
   
   // Fetch product data when component mounts
   useEffect(() => {
-    if (productId) {
-      fetchProduct(productId);
-    }
-  }, [productId, token]);
-  
-  // Fetch product details from the API
-  const fetchProduct = async (id) => {
-    try {
-      setLoading(true);
-      setError(null);
+    const fetchProductDetails = async () => {
+      if (!productId) return;
       
-      const response = await fetch(`http://localhost:5000/api/products/${id}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
+      try {
+        setLoading(true);
+        setError(null);
+        
+        const response = await fetch(getApiUrl(`/api/products/${productId}`), {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        
+        const data = await response.json();
+        
+        if (!response.ok) {
+          throw new Error(data.message || 'Failed to fetch product details');
         }
-      });
-      
-      const data = await response.json();
-      
-      if (!response.ok) {
-        throw new Error(data.message || 'Failed to fetch product details');
+        
+        setProduct(data.product);
+      } catch (err) {
+        console.error('Error fetching product details:', err);
+        setError('Failed to fetch product details. Please try again.');
+      } finally {
+        setLoading(false);
       }
-      
-      setProduct(data.product);
-    } catch (err) {
-      console.error('Error fetching product:', err);
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
+    
+    fetchProductDetails();
+  }, [productId, token]);
   
   // Handle form change
   const handleProductFormChange = (e) => {
@@ -165,7 +165,7 @@ const EditProduct = ({ token, productId, setActiveSection }) => {
       };
       
       // Make the API request
-      const response = await fetch(`http://localhost:5000/api/products/${productId}`, {
+      const response = await fetch(getApiUrl(`/api/products/${productId}`), {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

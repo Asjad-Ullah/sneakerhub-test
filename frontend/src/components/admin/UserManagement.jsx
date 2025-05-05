@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../../context/AuthContext';
+import { getApiUrl } from '../../utils/axiosConfig';
 
 const UserManagement = () => {
   const { token } = useContext(AuthContext);
@@ -19,7 +20,7 @@ const UserManagement = () => {
         setLoading(true);
         setError(null);
         
-        const response = await fetch('http://localhost:5000/api/auth/admin/users', {
+        const response = await fetch(getApiUrl('/api/auth/admin/users'), {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -84,7 +85,7 @@ const UserManagement = () => {
       
       // Only make API call if role is actually changing
       if ((newRole === 'admin' && !user.isAdmin) || (newRole === 'user' && user.isAdmin)) {
-        const response = await fetch(`http://localhost:5000/api/auth/admin/users/${user._id}/toggle-admin`, {
+        const response = await fetch(getApiUrl(`/api/auth/admin/users/${user._id}/toggle-admin`), {
           method: 'PATCH',
           headers: {
             'Authorization': `Bearer ${token}`
@@ -121,7 +122,7 @@ const UserManagement = () => {
       
       setLoading(true);
       
-      const response = await fetch(`http://localhost:5000/api/auth/admin/users/${userToDelete._id}`, {
+      const response = await fetch(getApiUrl(`/api/auth/admin/users/${userToDelete._id}`), {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`

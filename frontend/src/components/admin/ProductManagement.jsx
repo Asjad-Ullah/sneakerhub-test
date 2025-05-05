@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FaPlus, FaEdit, FaTrash, FaSearch } from 'react-icons/fa';
+import { getApiUrl } from '../../utils/axiosConfig';
 
 const ProductManagement = ({ setActiveSection, token }) => {
   const [products, setProducts] = useState([]);
@@ -11,44 +12,43 @@ const ProductManagement = ({ setActiveSection, token }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [productsPerPage] = useState(10);
   
-  // Fetch all products on component mount
+  // Fetch products from the API
   useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        
+        const response = await fetch(getApiUrl('/api/products'), {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        
+        const data = await response.json();
+        
+        if (!response.ok) {
+          throw new Error(data.message || 'Failed to fetch products');
+        }
+        
+        setProducts(data.products || []);
+      } catch (err) {
+        console.error('Error fetching products:', err);
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
     fetchProducts();
   }, [token]);
-  
-  // Fetch products from the API
-  const fetchProducts = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      
-      const response = await fetch('http://localhost:5000/api/products', {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-      
-      const data = await response.json();
-      
-      if (!response.ok) {
-        throw new Error(data.message || 'Failed to fetch products');
-      }
-      
-      setProducts(data.products || []);
-    } catch (err) {
-      console.error('Error fetching products:', err);
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
   
   // Delete a product
   const deleteProduct = async (id) => {
     try {
       setLoading(true);
       
-      const response = await fetch(`http://localhost:5000/api/products/${id}`, {
+      const response = await fetch(getApiUrl(`/api/products/${id}`), {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -62,6 +62,32 @@ const ProductManagement = ({ setActiveSection, token }) => {
       }
       
       // Refresh the product list
+      const fetchProducts = async () => {
+        try {
+          setLoading(true);
+          setError(null);
+          
+          const response = await fetch(getApiUrl('/api/products'), {
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          });
+          
+          const data = await response.json();
+          
+          if (!response.ok) {
+            throw new Error(data.message || 'Failed to fetch products');
+          }
+          
+          setProducts(data.products || []);
+        } catch (err) {
+          console.error('Error fetching products:', err);
+          setError(err.message);
+        } finally {
+          setLoading(false);
+        }
+      };
+      
       fetchProducts();
       setShowDeleteModal(false);
       setProductToDelete(null);

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../../context/AuthContext';
+import { getApiUrl } from '../../utils/axiosConfig';
 import { 
   BarChart, Bar, LineChart, Line, PieChart, Pie, 
   XAxis, YAxis, CartesianGrid, Tooltip, Legend, 
@@ -26,7 +27,7 @@ const DashboardHome = ({ currentUser }) => {
         setLoading(true);
         
         // Fetch dashboard statistics
-        const statsResponse = await fetch('http://localhost:5000/api/auth/admin/dashboard-stats', {
+        const statsResponse = await fetch(getApiUrl('/api/auth/admin/dashboard-stats'), {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -39,7 +40,7 @@ const DashboardHome = ({ currentUser }) => {
         const statsData = await statsResponse.json();
         
         // Fetch recent orders
-        const ordersResponse = await fetch('http://localhost:5000/api/orders/admin?limit=5', {
+        const ordersResponse = await fetch(getApiUrl('/api/orders/admin?limit=5'), {
           headers: {
             'Authorization': `Bearer ${token}`
           }

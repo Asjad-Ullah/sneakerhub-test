@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import AdminNavbar from '../components/AdminNavbar';
 import { useAuth } from '../context/AuthContext';
 import { FaHome, FaUsers, FaBox, FaShoppingCart, FaPlus } from 'react-icons/fa';
+import { getApiUrl } from '../utils/axiosConfig';
 
 // Import admin components
 import DashboardHome from '../components/admin/DashboardHome';
@@ -56,7 +57,7 @@ const AdminDashboard = () => {
       setUsersLoading(true);
       setUsersError(null);
       
-      const response = await fetch('http://localhost:5000/api/auth/admin/users', {
+      const response = await fetch(getApiUrl('/api/auth/admin/users'), {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -84,7 +85,7 @@ const AdminDashboard = () => {
       setOrdersLoading(true);
       setOrdersError(null);
       
-      const response = await fetch('http://localhost:5000/api/orders/admin', {
+      const response = await fetch(getApiUrl('/api/orders/admin'), {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`
