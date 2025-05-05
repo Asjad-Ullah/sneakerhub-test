@@ -1,0 +1,10 @@
+# Render service configuration
+
+# Build commands
+build = "npm install"
+
+# Start command
+start = "npm start"
+
+# Node.js version
+node = "18"
