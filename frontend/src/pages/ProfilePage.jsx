@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { getApiUrl } from '../utils/axiosConfig';
 
 const ProfilePage = () => {
   const { currentUser, token } = useAuth();
@@ -51,7 +52,7 @@ const ProfilePage = () => {
       
       try {
         setLoadingOrders(true);
-        const response = await fetch('http://localhost:5000/api/orders/my-orders', {
+        const response = await fetch(getApiUrl('/api/orders/my-orders'), {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -117,7 +118,7 @@ const ProfilePage = () => {
         updateData.newPassword = formData.newPassword;
       }
 
-      const response = await fetch('http://localhost:5000/api/auth/update-profile', {
+      const response = await fetch(getApiUrl('/api/auth/update-profile'), {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
