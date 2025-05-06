@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AdminNavbar from '../components/AdminNavbar';
 import { useAuth } from '../context/AuthContext';
-import { FaHome, FaUsers, FaBox, FaShoppingCart, FaPlus } from 'react-icons/fa';
+import { FaHome, FaUsers, FaBox, FaShoppingCart, FaPlus, FaBars, FaTimes } from 'react-icons/fa';
 import { getApiUrl } from '../utils/axiosConfig';
 
 // Import admin components
@@ -24,6 +24,7 @@ const AdminDashboard = () => {
   const [orders, setOrders] = useState([]);
   const [ordersLoading, setOrdersLoading] = useState(false);
   const [ordersError, setOrdersError] = useState(null);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Check if user is authorized to access admin dashboard
   useEffect(() => {
@@ -111,10 +112,23 @@ const AdminDashboard = () => {
     <div className="bg-gray-100 min-h-screen">
       <AdminNavbar />
       
+      {/* Mobile menu toggle button */}
+      <div className="fixed top-20 left-4 z-20 md:hidden">
+        <button 
+          onClick={() => setSidebarOpen(!sidebarOpen)}
+          className="bg-gray-800 text-white p-2 rounded-md shadow-lg"
+          aria-label={sidebarOpen ? "Close sidebar" : "Open sidebar"}
+        >
+          {sidebarOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
+        </button>
+      </div>
+      
       <div className="flex pt-16">
-        {/* Sidebar */}
-        <div className="w-64 bg-gray-800 text-white h-screen fixed left-0 top-16 overflow-auto">
-          <div className="p-4">
+        {/* Sidebar - hidden by default on mobile, shown when sidebarOpen is true */}
+        <div className={`bg-gray-800 text-white h-screen fixed left-0 top-16 overflow-auto transition-all duration-300 z-10 ${
+          sidebarOpen ? 'w-64 opacity-100' : 'w-0 opacity-0 md:opacity-100 md:w-64'
+        }`}>
+          <div className="p-4 min-w-64">
             <h2 className="text-lg font-semibold mb-4">Admin Panel</h2>
             <ul className="space-y-2">
               <li>
@@ -187,7 +201,9 @@ const AdminDashboard = () => {
         </div>
         
         {/* Main Content */}
-        <div className="ml-64 flex-1 p-8">
+        <div className={`transition-all duration-300 p-4 md:p-8 ${
+          sidebarOpen ? 'ml-64' : 'ml-0 md:ml-64'
+        }`}>
           {/* Render the appropriate component based on the active section */}
           {activeSection === 'dashboard' && (
             <DashboardHome currentUser={currentUser} />
