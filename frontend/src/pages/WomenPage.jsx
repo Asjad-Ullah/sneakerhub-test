@@ -255,23 +255,25 @@ const WomenPage = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredProducts.map(product => (
                   <div key={product._id} className="group">
-                    <div className="relative overflow-hidden rounded-lg mb-3">
-                      <img 
-                        src={product.images[0]?.url || womenFallbackImage} 
-                        alt={product.images[0]?.alt || product.name} 
-                        className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
-                      <div className="absolute bottom-0 left-0 right-0 p-4 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                        <Link 
-                          to={`/product/${product._id}`}
-                          className="w-full bg-red-500 text-white px-4 py-2 rounded-full flex items-center justify-center hover:bg-red-600 transition-colors duration-300"
-                        >
-                          View Product
-                        </Link>
+                    <Link to={`/product/${product._id}`} className="block">
+                      <div className="relative overflow-hidden rounded-lg mb-3">
+                        <img 
+                          src={product.images[0]?.url || womenFallbackImage} 
+                          alt={product.images[0]?.alt || product.name} 
+                          className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
+                        {/* Button visible on mobile, and on hover for desktop */}
+                        <div className="absolute bottom-0 left-0 right-0 p-4 md:transform md:translate-y-full md:group-hover:translate-y-0 transition-transform duration-300 flex justify-center">
+                          <span
+                            className="w-full bg-red-500 text-white px-4 py-2 rounded-full flex items-center justify-center hover:bg-red-600 transition-colors duration-300"
+                          >
+                            View Product
+                          </span>
+                        </div>
                       </div>
-                    </div>
-                    <h3 className="font-medium text-lg">{product.name}</h3>
-                    <p className="text-gray-700">${product.price}</p>
+                      <h3 className="font-medium text-lg">{product.name}</h3>
+                      <p className="text-gray-700">${product.price}</p>
+                    </Link>
                   </div>
                 ))}
               </div>

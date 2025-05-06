@@ -88,34 +88,36 @@ const NewPage = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {categoryProducts.map((product) => (
           <div key={product._id} className="group bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
-            <div className="relative overflow-hidden">
-              <img
-                src={product.images[0]?.url}
-                alt={product.name}
-                className="w-full h-64 object-cover transform group-hover:scale-105 transition-transform duration-300"
-                onError={(e) => {
-                  e.target.src = `/src/assets/${product.category.gender}.jpg`;
-                }}
-              />
-              <div className="absolute top-0 right-0 bg-red-500 text-white text-xs font-bold px-3 py-1 m-2 rounded-full">
-                NEW
+            <Link to={`/product/${product._id}`} className="block">
+              <div className="relative overflow-hidden">
+                <img
+                  src={product.images[0]?.url}
+                  alt={product.name}
+                  className="w-full h-64 object-cover transform group-hover:scale-105 transition-transform duration-300"
+                  onError={(e) => {
+                    e.target.src = `/src/assets/${product.category.gender}.jpg`;
+                  }}
+                />
+                <div className="absolute top-0 right-0 bg-red-500 text-white text-xs font-bold px-3 py-1 m-2 rounded-full">
+                  NEW
+                </div>
+                {/* Button visible on mobile, and on hover for desktop */}
+                <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/70 to-transparent md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300">
+                  <span 
+                    className="w-full bg-white text-black px-4 py-2 rounded-full font-medium flex items-center justify-center hover:bg-gray-100 transition-colors"
+                  >
+                    View Details
+                  </span>
+                </div>
               </div>
-              <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <Link 
-                  to={`/product/${product._id}`}
-                  className="w-full bg-white text-black px-4 py-2 rounded-full font-medium flex items-center justify-center hover:bg-gray-100 transition-colors"
-                >
-                  View Details
-                </Link>
+              <div className="p-4">
+                <h3 className="font-medium text-lg mb-1">{product.name}</h3>
+                <p className="text-gray-700 font-bold">${product.price.toFixed(2)}</p>
+                <p className="text-sm text-gray-500 capitalize mt-1">
+                  {product.category.gender}'s {product.category.type}
+                </p>
               </div>
-            </div>
-            <div className="p-4">
-              <h3 className="font-medium text-lg mb-1">{product.name}</h3>
-              <p className="text-gray-700 font-bold">${product.price.toFixed(2)}</p>
-              <p className="text-sm text-gray-500 capitalize mt-1">
-                {product.category.gender}'s {product.category.type}
-              </p>
-            </div>
+            </Link>
           </div>
         ))}
       </div>
